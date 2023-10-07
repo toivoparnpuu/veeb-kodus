@@ -60,7 +60,7 @@
       return (
         <div>
           <div>
-            <h2>Filters:</h2>
+            <h2>Filtrid:</h2>
             <ul>
               <li>
                 Kas aine on kohustulik või valikaine:
@@ -89,10 +89,10 @@
               <li>Assessment</li>
             </ul>
           </div>
-          <h2>Subjects:</h2>
+          <h2>Õppeained:</h2>
           <ol>
             {filteredSubjects.map((subject, index) => {
-              console.log(subject.subject.nameEt);
+              //console.log(subject.subject.nameEt);
               return <li key={index}>{subject.subject.nameEt}</li>;
             })}
           </ol>
