@@ -16,7 +16,6 @@ sisaldab ühte ainet
 
 sisaldab aine nime ja sisu
 
-
 ## näide andmete kuvamisest konsoolis
 
 ```javascript
