@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reacti katsetused</title>
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="kiht1"></div>
+  </body>
+  <script type="text/babel">
+    function Leht() {
+      const [subjects, setSubjects] = React.useState([]);
+      const [optional, setOptional] = React.useState("all");
+      const [studyYearNumber, setStudyYearNumber] = React.useState("all");
+
+      React.useEffect(() => {
+        fetch("http://localhost:3000/api/v1/subjects/")
+          .then((response) => response.json())
+          .then((data) => {
+            //console.log(data);
+            setSubjects(data);
+          });
+      }, []);
+
+      const handleOptionalChange = (event) => {
+        setOptional(event.target.value);
+      };
+
+      const handleStudyYearNumberChange = (event) => {
+        setStudyYearNumber(event.target.value);
+      };
+
+      const filteredSubjects = subjects.filter((subject) => {
+        if (optional === "all" && studyYearNumber === "all") {
+          return true;
+        } else if (optional === "all") {
+          return subject.studyYearNumber === parseInt(studyYearNumber);
+        } else if (studyYearNumber === "all") {
+          return subject.optional === (optional === "true");
+        } else {
+          return (
+            subject.optional === (optional === "true") &&
+            subject.studyYearNumber === parseInt(studyYearNumber)
+          );
+        }
+      });
+
+      const studyYearNumbers = [
+        ...new Set(subjects.map((subject) => subject.studyYearNumber)),
+      ];
+
+      return (
+        <div>
+          <div>
+            <h2>Filters:</h2>
+            <ul>
+              <li>
+                Kas aine on kohustulik või valikaine:
+                <select value={optional} onChange={handleOptionalChange}>
+                  <option value="all">Kõik</option>
+                  <option value="true">valik või vabaaine</option>
+                  <option value="false">kohustulik</option>
+                </select>
+              </li>
+              <li>
+                Õppeaasta:
+                <select
+                  value={studyYearNumber}
+                  onChange={handleStudyYearNumberChange}
+                >
+                  <option value="all">Kõik</option>
+                  {studyYearNumbers.map((number) => (
+                    <option key={number} value={number}>
+                      {number}
+                    </option>
+                  ))}
+                </select>
+              </li>
+              <li>Autumn</li>
+              <li>Spring</li>
+              <li>Assessment</li>
+            </ul>
+          </div>
+          <h2>Subjects:</h2>
+          <ol>
+            {filteredSubjects.map((subject, index) => {
+              console.log(subject.subject.nameEt);
+              return <li key={index}>{subject.subject.nameEt}</li>;
+            })}
+          </ol>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("kiht1"));
+    root.render(<Leht />);
+  </script>
+</html>

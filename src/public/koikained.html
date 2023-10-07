@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reacti katsetused</title>
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="kiht1"></div>
+  </body>
+  <script type="text/babel">
+    function Leht() {
+      const [subjects, setSubjects] = React.useState([]);
+
+      React.useEffect(() => {
+        fetch("http://localhost:3000/api/v1/subjects/")
+          .then((response) => response.json())
+          .then((data) => {
+            //console.log(data);
+            setSubjects(data);
+          });
+      }, []);
+
+      return (
+        <div>
+          <ul>
+            {subjects.map((subject, index) => {
+              console.log(subject.subject.nameEt);
+              return <li key={index}>{subject.subject.nameEt}</li>;
+            })}
+          </ul>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("kiht1"));
+    root.render(<Leht />);
+  </script>
+</html>

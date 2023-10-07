@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reacti katsetused</title>
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="kiht1"></div>
+  </body>
+  <script type="text/babel">
+    function Oppekava(props) {
+      const [selectedModule, setSelectedModule] = React.useState(null);
+
+      const handleModuleClick = (module) => {
+        setSelectedModule(module);
+      };
+
+      return (
+        <div>
+          <h1>Õppekava</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Index</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {props.modules.map((module, index) => (
+                <tr key={index} onClick={() => handleModuleClick(module)}>
+                  <td>{index}</td>
+                  <td>{module.nameEt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {selectedModule && (
+            <div>
+              <h2>{selectedModule.nameEt} ained:</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Credits</th>
+                    <th>studyYearNumber</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedModule.subjects.map((subject, index) => {
+                    console.log(subject);
+                    return (
+                      <tr key={index}>
+                        <td>{subject.subject.nameEt}</td>
+                        <td>{subject.subject.credits}EAP</td>
+                        <td>{subject.studyYearNumber}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function Leht() {
+      const [oppekava, muudaOppekava] = React.useState([]);
+
+      React.useEffect(() => {
+        fetch("http://localhost:3000/api/v1/modules")
+          .then((d) => d.json())
+          .then((obj) => muudaOppekava(obj));
+        //.then(obj => console.log(obj));
+      }, []);
+
+      return (
+        <div>
+          <Oppekava modules={oppekava} />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("kiht1"));
+    root.render(<Leht />);
+  </script>
+</html>
